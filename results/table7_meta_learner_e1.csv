@@ -1,0 +1,14 @@
+Meta-Learner,Type,MSE,RMSE,R2,MAPE (%)
+Ridge,Linear,8.302e-5,0.009112,0.98891,0.944
+Stacking,Hybrid,8.303e-5,0.009112,0.98890,0.944
+Lasso,Linear,8.303e-5,0.009112,0.98890,0.944
+Linear,Linear,8.369e-5,0.009148,0.98882,0.945
+ExtraTrees,Non-linear,8.370e-5,0.009149,0.98881,0.945
+RandomForest,Non-linear,8.438e-5,0.009186,0.98872,0.948
+Huber,Linear,8.505e-5,0.009222,0.98863,0.953
+XGBoost,Non-linear,8.666e-5,0.009309,0.98842,0.962
+GradientBoost,Non-linear,8.695e-5,0.009324,0.98838,0.959
+CatBoost,Non-linear,8.986e-5,0.009480,0.98799,0.978
+LightGBM,Non-linear,9.281e-5,0.009634,0.98760,0.991
+MLP,Non-linear,1.039e-4,0.010192,0.98612,1.069
+SVR,Non-linear,2.223e-4,0.014911,0.97029,1.448

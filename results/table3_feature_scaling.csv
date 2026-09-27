@@ -1,0 +1,4 @@
+Scaler,Best Learner,Ensemble,RMSE*,R2
+MinMax,RandomForest,E2,0.009108,0.98892
+Standard,Ridge,E2,0.036143,0.98891
+Robust,RandomForest,E2,0.022215,0.98900
