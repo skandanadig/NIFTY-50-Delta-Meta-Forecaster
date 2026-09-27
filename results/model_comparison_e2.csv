@@ -1,14 +1,14 @@
-Meta-Learner,Type,MSE,RMSE,R2,MAPE (%)
-RandomForest,Non-linear,8.295e-5,0.009108,0.98892,0.942
-Ridge,Linear,8.301e-5,0.009111,0.98891,0.943
-Stacking,Hybrid,8.303e-5,0.009112,0.98890,0.944
-Lasso,Linear,8.303e-5,0.009112,0.98890,0.944
-ExtraTrees,Non-linear,8.366e-5,0.009147,0.98882,0.946
-Linear,Linear,8.577e-5,0.009261,0.98854,0.963
-Huber,Linear,8.609e-5,0.009279,0.98850,0.956
-XGBoost,Non-linear,8.779e-5,0.009369,0.98827,0.966
-GradientBoost,Non-linear,8.940e-5,0.009455,0.98805,0.983
-LightGBM,Non-linear,9.206e-5,0.009595,0.98770,0.984
-CatBoost,Non-linear,9.263e-5,0.009625,0.98762,0.983
-SVR,Non-linear,9.495e-5,0.009744,0.98731,1.006
-MLP,Non-linear,1.089e-4,0.010435,0.98545,1.103
+Meta-Learner,Type,RMSE,R2,MAPE (%),Key Highlight
+Random Forest,Non-linear,0.009108,0.98892,0.942%,"🏆 Best Overall Model (Lowest Error)"
+Ridge,Linear,0.009111,0.98891,0.943%,"⭐ Top Linear Model (Highly Robust)"
+Stacking,Hybrid,0.009112,0.98890,0.944%,"Strong Hybrid Performer"
+Lasso,Linear,0.009112,0.98890,0.944%,
+ExtraTrees,Non-linear,0.009147,0.98882,0.946%,
+Linear,Linear,0.009261,0.98854,0.963%,
+Huber,Linear,0.009279,0.98850,0.956%,
+XGBoost,Non-linear,0.009369,0.98827,0.966%,
+GradientBoost,Non-linear,0.009455,0.98805,0.983%,
+LightGBM,Non-linear,0.009595,0.98770,0.984%,
+CatBoost,Non-linear,0.009625,0.98762,0.983%,
+SVR,Non-linear,0.009744,0.98731,1.006%,"⚠️ Weakest Performer"
+MLP,Non-linear,0.010435,0.98545,1.103%,"Lowest Accuracy"
