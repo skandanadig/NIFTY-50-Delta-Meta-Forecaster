@@ -5,6 +5,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://tensorflow.org)
+[![Conference](https://img.shields.io/badge/Accepted-ICon%20INDIA%202026-brightgreen)](#-publications--acknowledgements)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 *An advanced, publication-grade deep learning architecture designed to tackle the volatile, non-linear, and non-stationary nature of the NIFTY-50 financial index.*
@@ -17,37 +18,48 @@
 
 Welcome to the **NIFTY-50 Delta-Meta Forecaster**! 
 
-Stock price prediction is notoriously difficult, especially when the market trends aggressively into unprecedented highs or lows (distribution shifts). Traditional stacked ensembles often fail when forced to extrapolate. 
+Stock price prediction is a formidable challenge, especially when financial indices trend aggressively into unprecedented highs or lows (distribution shifts). Traditional stacked ensembles and sequence models often fail in these scenarios, suffering from severe extrapolation errors and lagging the market.
 
-**Our Solution?** We mapped the entire problem into **Delta-Space**! 🌌
+**Our Core Innovation:** We mapped the entire forecasting problem into **Delta-Space**! 🌌
 
-Instead of forcing our models to guess absolute price levels, our base learners predict *the change relative to the previous day*. We then use a secondary **Meta-Learner** to synthesize these predictions, resulting in a model that dynamically adapts to market trends without suffering from naive lag.
+### 🔬 The Delta-Transformation Advantage
+Instead of forcing our models to guess absolute, non-stationary price levels, our base learners predict *the change relative to the previous day* (the delta). 
+
+1. **Stationary Bounds:** By predicting deltas, the target variable is mathematically restricted into a stationary distribution.
+2. **Eliminating Extrapolation Failure:** Meta-learners no longer have to guess price levels they have never seen during training. They operate purely on familiar, bounded delta ranges.
+3. **No More Lag:** The final reconstructed price series actively tracks turning points and momentum rather than merely smoothing out the trend.
 
 ---
 
-## 🧠 The Architecture
+## 🧠 The Hybrid Ensemble Architecture
 
 Our framework is built on a heterogeneous **two-layer stacked ensemble**:
 
-1. **The Base Learners:** We employ state-of-the-art Deep Learning models to extract unique temporal and spatial features from a 10-day sliding window of NIFTY-50 OHLC data.
-   - 🌀 **LSTM:** Captures long-term sequential dependencies.
-   - 🖼️ **CNN:** Extracts local geometric and structural patterns.
-   - 🕰️ **TCN:** Leverages dilated causal convolutions for long-range mapping.
-2. **The Meta-Learners:** We evaluated **13 different meta-learners** in delta-space (including Random Forest, XGBoost, Ridge, and Stacking Regressors) to find the perfect synergistic correction layer.
+### Layer 1: The Base Learners
+We employ state-of-the-art Deep Learning models to extract unique temporal and spatial features from a 10-day sliding window of NIFTY-50 OHLC data.
+- 🌀 **LSTM:** Captures long-term sequential dependencies and historical market trends.
+- 🖼️ **CNN:** Extracts local geometric and structural patterns via spatial bias.
+- 🕰️ **TCN:** Leverages dilated causal convolutions for mapping long-range dependencies across market regimes.
+
+### Layer 2: The Meta-Learners
+We evaluated **13 different meta-learners** in delta-space (including Random Forest, XGBoost, Ridge, and Stacking Regressors) to find the perfect synergistic correction layer to fuse the base models' outputs.
 
 ---
 
 ## 🏆 Key Highlights & Results
 
-We rigorously tested our framework on **11 years of historical data (Jan 2013 - Jan 2024)**. 
+We rigorously tested our framework using 5-Fold Cross-Validation on **11 years of historical data (Jan 2013 - Jan 2024)**. 
 
-> [!TIP]
-> **Winner:** The **E2 (LSTM + TCN) ensemble** paired with a **Random Forest meta-learner** dominated the evaluations!
+> [!IMPORTANT]
+> **The Winner:** The **E2 (LSTM + TCN) ensemble** paired with a **Random Forest meta-learner** dominated the evaluations, achieving unprecedented accuracy on the NIFTY-50 dataset!
 
 - 📉 **RMSE:** `0.009108` (MinMax scaled)
 - 🎯 **$R^2$ Score:** `0.98892`
-- ⚡ **Performance Leap:** A massive **~49% reduction in RMSE** compared to the best standalone base model (CNN).
-- 💡 **Interesting Finding:** In delta-space, shallow linear models and tree-ensembles consistently outperformed highly complex gradient boosting and neural networks, proving that the delta-transformation itself is the true driver of accuracy!
+- 🎯 **MAPE:** `0.942%`
+- ⚡ **Performance Leap:** A massive **~48.7% reduction in RMSE** compared to the best standalone base model (CNN).
+- 💡 **Architectural Finding:** In delta-space, shallow linear models and tree-ensembles consistently outperformed highly complex gradient boosting and neural networks, proving that the **delta-transformation itself is the true driver of accuracy!**
+
+*(Check out the `results/` folder for comprehensive data tables and visual prediction tracking!)*
 
 ---
 
@@ -57,7 +69,7 @@ Everything is cleanly organized so you can dive right in:
 
 ```text
 📦 nifty50-forecasting
- ┣ 📂 data                  # Raw and processed datasets
+ ┣ 📂 data                  # Raw and processed historical NIFTY-50 datasets
  ┣ 📂 notebooks             # The core Jupyter Notebook containing the experiments
  ┣ 📂 paper                 # The standalone research manuscript PDF
  ┣ 📂 results               
@@ -90,6 +102,21 @@ jupyter notebook notebooks/nifty50_forecasting.ipynb
 ```
 
 ---
+
+## 🎓 Publications & Acknowledgements
+
+This research was conducted as an internship project at the **Center for Cloud Computing and Big Data (CCBD), PES University**.
+
+> 🎉 **Publication Accepted!**  
+> This paper has been officially accepted for presentation at **The International Conference on Intelligent Networks and Data-driven Intelligent Applications (ICon INDIA 2026)**, scheduled for **20–22 November 2026 in Puducherry, India**.
+
+### 👥 Contributors
+- **Sharat Doddihal** - *PES University*
+- **Shishir Hegde** - *PES University*
+- **Skanda Shyam Nadig** - *PES University*
+- **Shree Verdhan M** - *PES University*
+- **Dr. Nagegowda K S** - *Professor, PES University*
+
 <div align="center">
-<i>Crafted with ❤️ for Quantitative Finance and Machine Learning.</i>
+<i>Crafted with ❤️ for Quantitative Finance, Machine Learning, and Academic Excellence.</i>
 </div>
