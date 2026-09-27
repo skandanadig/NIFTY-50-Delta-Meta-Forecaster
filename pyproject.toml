@@ -1,0 +1,25 @@
+﻿[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nifty50_forecaster"
+version = "0.1.0"
+description = "A Delta-Transformation-Based Meta-Learning Hybrid Ensemble Framework for NIFTY-50 Index Forecasting."
+authors = [{name = "Skanda Shyam Nadig"}]
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "tensorflow",
+    "matplotlib",
+    "yfinance",
+    "pyyaml"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8"
+]

@@ -5,6 +5,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://tensorflow.org)
+[![CI/CD Tests](https://github.com/skandanadig/delta-meta-ensembles/actions/workflows/tests.yml/badge.svg)](https://github.com/skandanadig/delta-meta-ensembles/actions)
 [![Conference](https://img.shields.io/badge/Accepted-ICon%20INDIA%202026-brightgreen)](#-publications--acknowledgements)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
@@ -31,59 +32,84 @@ Instead of forcing our models to guess absolute, non-stationary price levels, ou
 
 ---
 
-## 🧠 The Hybrid Ensemble Architecture
-
-Our framework is built on a heterogeneous **two-layer stacked ensemble**:
-
-### Layer 1: The Base Learners
-We employ state-of-the-art Deep Learning models to extract unique temporal and spatial features from a 10-day sliding window of NIFTY-50 OHLC data.
-- 🌀 **LSTM:** Captures long-term sequential dependencies and historical market trends.
-- 🖼️ **CNN:** Extracts local geometric and structural patterns via spatial bias.
-- 🕰️ **TCN:** Leverages dilated causal convolutions for mapping long-range dependencies across market regimes.
-
-### Layer 2: The Meta-Learners
-We evaluated **13 different meta-learners** in delta-space (including Random Forest, XGBoost, Ridge, and Stacking Regressors) to find the perfect synergistic correction layer to fuse the base models' outputs.
-
----
-
 ## 🏆 Key Highlights & Results
 
-We rigorously tested our framework using 5-Fold Cross-Validation on **11 years of historical data (Jan 2013 - Jan 2024)**. 
-
 > [!IMPORTANT]
-> **The Winner:** The **E2 (LSTM + TCN) ensemble** paired with a **Random Forest meta-learner** dominated the evaluations, achieving unprecedented accuracy on the NIFTY-50 dataset!
+> **The Winner:** The **E2 (LSTM + TCN)** ensemble paired with a **Random Forest meta-learner** achieved a massive **~48.7% reduction in RMSE** compared to the best standalone base model (CNN).
 
 - 📉 **RMSE:** `0.009108` (MinMax scaled)
 - 🎯 **$R^2$ Score:** `0.98892`
 - 🎯 **MAPE:** `0.942%`
-- ⚡ **Performance Leap:** A massive **~48.7% reduction in RMSE** compared to the best standalone base model (CNN).
 - 💡 **Architectural Finding:** In delta-space, shallow linear models and tree-ensembles consistently outperformed highly complex gradient boosting and neural networks, proving that the **delta-transformation itself is the true driver of accuracy!**
 
-*(Check out the `results/` folder for comprehensive data tables and visual prediction tracking!)*
+**Final Reconstruction Visualization:**
+![Final Reconstruction](results/figures/visual_result_11.png)
+
+---
+
+## 🧠 The Hybrid Ensemble Architecture
+
+Our framework is built on a heterogeneous **two-layer stacked ensemble**:
+
+```text
+             NIFTY-50 Prices
+                    ↓
+             Delta Transform
+                    ↓
+        ┌───────────┼───────────┐
+       LSTM        CNN         TCN
+        └───────────┼───────────┘
+                    ↓
+              Meta Features
+                    ↓
+          Meta-Learner Ensemble
+                    ↓
+             Price Forecast
+```
+
+### Layer 1: The Base Learners
+- 🌀 **LSTM:** Captures long-term sequential dependencies.
+- 🖼️ **CNN:** Extracts local geometric and structural patterns.
+- 🕰️ **TCN:** Leverages dilated causal convolutions for mapping long-range dependencies.
+
+### Layer 2: The Meta-Learners
+We evaluated **13 different meta-learners** in delta-space (Random Forest, XGBoost, Ridge, Stacking Regressors) to find the perfect synergistic correction layer.
 
 ---
 
 ## 📂 Repository Structure
 
-Everything is cleanly organized so you can dive right in:
+The project has been architected as a professional, reproducible ML software system:
 
 ```text
 📦 nifty50-forecasting
- ┣ 📂 data                  # Raw and processed historical NIFTY-50 datasets
- ┣ 📂 notebooks             # The core Jupyter Notebook containing the experiments
- ┣ 📂 paper                 # The standalone research manuscript PDF
+ ┣ 📂 configs               # YAML configs for hyperparameters (epochs, LR, windows)
+ ┣ 📂 data                  
+ ┃ ┣ 📂 raw                 # Downloaded dataset
+ ┃ ┗ 📂 processed           # Transformed & scaled data arrays
+ ┣ 📂 notebooks             
+ ┃ ┗ 📜 01_exploration.ipynb # Initial data exploration & prototyping
+ ┣ 📂 paper                 # Standalone research manuscript PDF
  ┣ 📂 results               
- ┃ ┣ 📂 tabular_results     # Clean CSVs of all 7 data tables from the paper
- ┃ ┗ 📂 visual_results      # Border-trimmed screenshots of performance graphs
- ┣ 📜 README.md             # You are here!
- ┗ 📜 requirements.txt      # Python dependencies
+ ┃ ┣ 📜 metrics.csv         # Computed evaluation metrics
+ ┃ ┣ 📜 model_comparison.csv# Comprehensive ablation results
+ ┃ ┗ 📂 figures             # Saved evaluation plots and prediction tracking charts
+ ┣ 📂 src                   
+ ┃ ┣ 📂 models              # Base & Meta models (LSTM, CNN, TCN, Meta)
+ ┃ ┣ 📜 data.py             # Data fetching pipelines
+ ┃ ┣ 📜 preprocessing.py    # Scaling & windowing
+ ┃ ┣ 📜 features.py         # Delta-transformation logic
+ ┃ ┣ 📜 train.py            # Main execution pipeline
+ ┃ ┗ 📜 evaluate.py         # Scoring metrics
+ ┣ 📂 tests                 # Unit tests (pytest)
+ ┣ 📜 README.md             
+ ┣ 📜 pyproject.toml        # Package & dependency definitions
+ ┗ 📜 requirements.txt      
 ```
 
 ---
 
-## 🚀 Getting Started
-
-Want to run the models yourself? It's easy!
+## 🚀 Reproducibility & Getting Started
 
 **1. Clone the repository**
 ```bash
@@ -92,13 +118,23 @@ cd delta-meta-ensembles
 ```
 
 **2. Install Dependencies**
+We provide both a `requirements.txt` and a `pyproject.toml` for modern tooling.
 ```bash
 pip install -r requirements.txt
+# OR install as a package:
+pip install -e .[dev]
 ```
 
-**3. Fire up the Notebook!**
+**3. Run the Pipeline!**
+The entire pipeline is configurable. Simply pass a YAML config to the training script:
 ```bash
-jupyter notebook notebooks/nifty50_forecasting.ipynb
+python -m src.train --config configs/ensemble.yaml
+```
+
+**4. Run the Unit Tests**
+Ensure the data logic and delta transformations are correct:
+```bash
+pytest tests/
 ```
 
 ---

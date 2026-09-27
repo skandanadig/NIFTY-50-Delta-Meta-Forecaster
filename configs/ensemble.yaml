@@ -1,0 +1,17 @@
+﻿data:
+  symbol: '^NSEI'
+  start_date: '2013-01-01'
+  end_date: '2024-01-01'
+  lookback_window: 10
+  train_split: 0.6
+  val_split: 0.15
+  test_split: 0.25
+  scaler: 'MinMax'
+training:
+  batch_size: 64
+  epochs: 100
+  learning_rate: 0.0001
+  patience: 15
+models:
+  base: ['LSTM', 'TCN']
+  meta: 'RandomForest'
