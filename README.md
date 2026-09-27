@@ -1,75 +1,95 @@
-# A Delta-Transformation-Based Meta-Learning Hybrid Ensemble Framework for NIFTY-50 Index Forecasting
+<div align="center">
 
-This repository contains the code, data structures, and results for forecasting the NIFTY-50 index using a novel Delta-Transformation-Based Meta-Learning Hybrid Ensemble Framework. 
+# 🚀 NIFTY-50 Delta-Meta Forecaster
+**A Delta-Transformation-Based Meta-Learning Hybrid Ensemble Framework**
 
-## Project Explanation & Approach
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://tensorflow.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-Stock price prediction is highly challenging due to non-linear and non-stationary behavior. While stacked ensembles improve predictions, they often struggle when out-of-sample data distributions shift (e.g., during sustained market trends where absolute price levels exceed anything seen in training).
+*An advanced, publication-grade deep learning architecture designed to tackle the volatile, non-linear, and non-stationary nature of the NIFTY-50 financial index.*
 
-To address this, our framework transforms predictions into **delta space**. Rather than predicting absolute price levels, our models predict the *change* relative to the previous day's closing price. 
+</div>
 
-**Methodology Highlights:**
-1. **Base Learners:** We utilize deep learning models—Long Short-Term Memory (LSTM), Convolutional Neural Networks (CNN), and Temporal Convolutional Networks (TCN)—to capture different aspects of sequential and local structural market patterns over a 10-day OHLC sliding window.
-2. **Ensemble Configurations:** We stack these models into two main configurations:
-   - **E1:** LSTM + CNN
-   - **E2:** LSTM + TCN
-3. **Meta-Learners in Delta Space:** Base model predictions are mapped to price *deltas*, which are then passed to a secondary meta-learner. We evaluated 13 different meta-learners (Linear Regression, Ridge, Lasso, Huber, Random Forest, XGBoost, etc.) to correct base model outputs.
-4. **Final Prediction:** The absolute price is reconstructed by adding the predicted delta to the previous day's observed closing price.
+---
 
-## Key Results
+## 🌟 Project Overview
 
-Our empirical study on 11 years of NIFTY-50 data (Jan 2013 - Jan 2024) demonstrates that delta-space ensembling significantly improves extrapolation during market trends.
+Welcome to the **NIFTY-50 Delta-Meta Forecaster**! 
 
-- **Best Configuration:** The **E2 (LSTM + TCN)** ensemble paired with a **Random Forest meta-learner** yielded the best overall accuracy.
-- **Performance Metrics (E2 + Random Forest):** 
-  - **RMSE:** 0.009108 (in MinMax scaled space)
-  - **$R^2$:** 0.98892
-  - **MAPE:** 0.942%
-- **Improvement:** This represents a ~49% reduction in RMSE relative to the best individual base model (CNN).
-- **Meta-Learner Findings:** Interestingly, linear meta-learners (Ridge, Lasso) and tree ensembles (Random Forest, Extra Trees) outperformed complex gradient boosting models and neural networks when operating in the 2-dimensional delta space, avoiding overfitting. Feature scaling strategy (MinMax, Standard, Robust) had negligible impact on $R^2$, underscoring that the delta-transformation itself is the key driver of accuracy.
+Stock price prediction is notoriously difficult, especially when the market trends aggressively into unprecedented highs or lows (distribution shifts). Traditional stacked ensembles often fail when forced to extrapolate. 
 
-## Project Structure
+**Our Solution?** We mapped the entire problem into **Delta-Space**! 🌌
 
+Instead of forcing our models to guess absolute price levels, our base learners predict *the change relative to the previous day*. We then use a secondary **Meta-Learner** to synthesize these predictions, resulting in a model that dynamically adapts to market trends without suffering from naive lag.
+
+---
+
+## 🧠 The Architecture
+
+Our framework is built on a heterogeneous **two-layer stacked ensemble**:
+
+1. **The Base Learners:** We employ state-of-the-art Deep Learning models to extract unique temporal and spatial features from a 10-day sliding window of NIFTY-50 OHLC data.
+   - 🌀 **LSTM:** Captures long-term sequential dependencies.
+   - 🖼️ **CNN:** Extracts local geometric and structural patterns.
+   - 🕰️ **TCN:** Leverages dilated causal convolutions for long-range mapping.
+2. **The Meta-Learners:** We evaluated **13 different meta-learners** in delta-space (including Random Forest, XGBoost, Ridge, and Stacking Regressors) to find the perfect synergistic correction layer.
+
+---
+
+## 🏆 Key Highlights & Results
+
+We rigorously tested our framework on **11 years of historical data (Jan 2013 - Jan 2024)**. 
+
+> [!TIP]
+> **Winner:** The **E2 (LSTM + TCN) ensemble** paired with a **Random Forest meta-learner** dominated the evaluations!
+
+- 📉 **RMSE:** `0.009108` (MinMax scaled)
+- 🎯 **$R^2$ Score:** `0.98892`
+- ⚡ **Performance Leap:** A massive **~49% reduction in RMSE** compared to the best standalone base model (CNN).
+- 💡 **Interesting Finding:** In delta-space, shallow linear models and tree-ensembles consistently outperformed highly complex gradient boosting and neural networks, proving that the delta-transformation itself is the true driver of accuracy!
+
+---
+
+## 📂 Repository Structure
+
+Everything is cleanly organized so you can dive right in:
+
+```text
+📦 nifty50-forecasting
+ ┣ 📂 data                  # Raw and processed datasets
+ ┣ 📂 notebooks             # The core Jupyter Notebook containing the experiments
+ ┣ 📂 paper                 # The standalone research manuscript PDF
+ ┣ 📂 results               
+ ┃ ┣ 📂 tabular_results     # Clean CSVs of all 7 data tables from the paper
+ ┃ ┗ 📂 visual_results      # Border-trimmed screenshots of performance graphs
+ ┣ 📜 README.md             # You are here!
+ ┗ 📜 requirements.txt      # Python dependencies
 ```
-.
-├── .gitignore                      # Excludes temporary files, environments, and data caches
-├── README.md                       # Project documentation (this file)
-├── requirements.txt                # Python dependencies
-├── data/                           
-│   └── README.md                   # Dataset details and instructions to fetch
-├── notebooks/                      
-│   └── nifty50_forecasting.ipynb   # Main Jupyter notebook containing the experiments
-└── results/                        
-    └── model_comparison_e2.csv     # Model evaluation metrics from the paper
+
+---
+
+## 🚀 Getting Started
+
+Want to run the models yourself? It's easy!
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/skandanadig/delta-meta-ensembles.git
+cd delta-meta-ensembles
 ```
 
-## Instructions to Run
+**2. Install Dependencies**
+```bash
+pip install -r requirements.txt
+```
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd nifty50-forecasting
-   ```
+**3. Fire up the Notebook!**
+```bash
+jupyter notebook notebooks/nifty50_forecasting.ipynb
+```
 
-2. **Set up a virtual environment (Optional but recommended):**
-   ```bash
-   python -m venv venv
-   # On Windows
-   .\venv\Scripts\activate
-   # On macOS/Linux
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Fetch the data:**
-   See `data/README.md` for instructions, or simply run the dataset fetching cell provided within the notebook.
-
-5. **Run the Notebook:**
-   ```bash
-   jupyter notebook notebooks/nifty50_forecasting.ipynb
-   ```
-   Execute the cells to train the base models (LSTM, CNN, TCN), perform the delta-transformation, train the 13 meta-learners, and view the comparison plots.
+---
+<div align="center">
+<i>Crafted with ❤️ for Quantitative Finance and Machine Learning.</i>
+</div>
