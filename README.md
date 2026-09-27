@@ -111,9 +111,9 @@ This research was conducted as an internship project at the **Center for Cloud C
 > This paper has been officially accepted for presentation at **The International Conference on Intelligent Networks and Data-driven Intelligent Applications (ICon INDIA 2026)**, scheduled for **20–22 November 2026 in Puducherry, India**.
 
 ### 👥 Contributors
+- **Skanda Shyam Nadig** - *PES University*
 - **Sharat Doddihal** - *PES University*
 - **Shishir Hegde** - *PES University*
-- **Skanda Shyam Nadig** - *PES University*
 - **Shree Verdhan M** - *PES University*
 - **Dr. Nagegowda K S** - *Professor, PES University*
 
