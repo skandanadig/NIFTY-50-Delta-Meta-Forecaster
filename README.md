@@ -42,8 +42,29 @@ Instead of forcing our models to guess absolute, non-stationary price levels, ou
 - 🎯 **MAPE:** `0.942%`
 - 💡 **Architectural Finding:** In delta-space, shallow linear models and tree-ensembles consistently outperformed highly complex gradient boosting and neural networks, proving that the **delta-transformation itself is the true driver of accuracy!**
 
+### 🧪 No Delta vs Delta Transformation
+We performed an ablation study comparing the performance of meta-learners with and without the Delta Transformation. The results clearly demonstrate that transforming the data into Delta-Space significantly improves metrics across the board (MSE, RMSE, R2, MAE, MAPE).
+
+![Delta vs No Delta Transformation](results/figures/delta_vs_no_delta_table.png)
+
+### 🧪 Walk-Forward vs Static Delta Analysis
+We also tested a walk-forward optimization approach for the delta meta-learner versus a static delta approach. We found that the errors are negligible between the two, indicating that the static delta approach is highly robust over time.
+
+![Walk-Forward vs Static Delta Table](results/figures/walk_forward_table.png)
+
+**Walk-Forward vs Static Delta Reconstruction:**
+![Walk-Forward vs Static Delta Graphs](results/figures/walk_forward_graphs.png)
+
 **Final Reconstruction Visualization:**
 ![Final Reconstruction](results/figures/visual_result_11.png)
+
+---
+
+## 🚀 Interactive Notebooks
+
+You can explore the code and run the models directly in Google Colab:
+- [Previous Version (Initial Setup & Exploration)](https://colab.research.google.com/drive/1645Yj1u76I2qkI8xb82Mr2gnyR6VAaqH)
+- [Version After 3 Reviews (Final Version with Additional Tests)](https://colab.research.google.com/drive/1645Yj1u76I2qkI8xb82Mr2gnyR6VAaqH#scrollTo=9YHULAkwd4ZB)
 
 ---
 
