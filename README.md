@@ -15,62 +15,17 @@
 
 ---
 
-## 🌟 Project Overview
+## 🌟 Executive Summary
 
-Welcome to the **NIFTY-50 Delta-Meta Forecaster**! 
+Stock price prediction is notoriously difficult due to the volatile, non-stationary nature of financial markets. Traditional deep learning sequence models often fail during aggressive market trends, suffering from severe extrapolation errors and lagging predictions (failing to anticipate turning points).
 
-Stock price prediction is a formidable challenge, especially when financial indices trend aggressively into unprecedented highs or lows (distribution shifts). Traditional stacked ensembles and sequence models often fail in these scenarios, suffering from severe extrapolation errors and lagging the market.
-
-**Our Core Innovation:** We mapped the entire forecasting problem into **Delta-Space**! 🌌
-
-### 🔬 The Delta-Transformation Advantage
-Instead of forcing our models to guess absolute, non-stationary price levels, our base learners predict *the change relative to the previous day* (the delta). 
-
-1. **Stationary Bounds:** By predicting deltas, the target variable is mathematically restricted into a stationary distribution.
-2. **Eliminating Extrapolation Failure:** Meta-learners no longer have to guess price levels they have never seen during training. They operate purely on familiar, bounded delta ranges.
-3. **No More Lag:** The final reconstructed price series actively tracks turning points and momentum rather than merely smoothing out the trend.
+**The NIFTY-50 Delta-Meta Forecaster** solves this by mapping the entire forecasting pipeline into **Delta-Space**. Instead of forcing models to guess absolute price levels they have never seen during training, our models predict the *relative change* (delta) from the previous day. This mathematically bounds the target variable into a stationary distribution, eliminating extrapolation failures and allowing the final reconstructed price series to actively track momentum and critical market reversals.
 
 ---
 
-## 🏆 Key Highlights & Results
+## 🧠 Architecture: The Hybrid Ensemble
 
-> [!IMPORTANT]
-> **The Winner:** The **E2 (LSTM + TCN)** ensemble paired with a **Random Forest meta-learner** achieved a massive **~48.7% reduction in RMSE** compared to the best standalone base model (CNN).
-
-- 📉 **RMSE:** `0.009108` (MinMax scaled)
-- 🎯 **$R^2$ Score:** `0.98892`
-- 🎯 **MAPE:** `0.942%`
-- 💡 **Architectural Finding:** In delta-space, shallow linear models and tree-ensembles consistently outperformed highly complex gradient boosting and neural networks, proving that the **delta-transformation itself is the true driver of accuracy!**
-
-### 🧪 No Delta vs Delta Transformation
-We performed an ablation study comparing the performance of meta-learners with and without the Delta Transformation. The results clearly demonstrate that transforming the data into Delta-Space significantly improves metrics across the board (MSE, RMSE, R2, MAE, MAPE).
-
-![Delta vs No Delta Transformation](results/figures/delta_vs_no_delta_table.png)
-
-### 🧪 Walk-Forward vs Static Delta Analysis
-We also tested a walk-forward optimization approach for the delta meta-learner versus a static delta approach. We found that the errors are negligible between the two, indicating that the static delta approach is highly robust over time.
-
-![Walk-Forward vs Static Delta Table](results/figures/walk_forward_table.png)
-
-**Walk-Forward vs Static Delta Reconstruction:**
-![Walk-Forward vs Static Delta Graphs](results/figures/walk_forward_graphs.png)
-
-**Final Reconstruction Visualization:**
-![Final Reconstruction](results/figures/visual_result_11.png)
-
----
-
-## 🚀 Interactive Notebooks
-
-You can explore the code and run the models directly in Google Colab:
-- [Previous Version (Initial Setup & Exploration)](https://colab.research.google.com/drive/1645Yj1u76I2qkI8xb82Mr2gnyR6VAaqH)
-- [Version After 3 Reviews (Final Version with Additional Tests)](https://colab.research.google.com/drive/1645Yj1u76I2qkI8xb82Mr2gnyR6VAaqH#scrollTo=9YHULAkwd4ZB)
-
----
-
-## 🧠 The Hybrid Ensemble Architecture
-
-Our framework is built on a heterogeneous **two-layer stacked ensemble**:
+Our framework utilizes a heterogeneous two-layer stacked ensemble, optimized for time-series forecasting.
 
 ```text
              NIFTY-50 Prices
@@ -88,49 +43,72 @@ Our framework is built on a heterogeneous **two-layer stacked ensemble**:
              Price Forecast
 ```
 
-### Layer 1: The Base Learners
-- 🌀 **LSTM:** Captures long-term sequential dependencies.
-- 🖼️ **CNN:** Extracts local geometric and structural patterns.
-- 🕰️ **TCN:** Leverages dilated causal convolutions for mapping long-range dependencies.
+### Layer 1: Base Learners in Delta-Space
+- 🌀 **LSTM (Long Short-Term Memory):** Captures temporal, long-term sequential dependencies.
+- 🖼️ **CNN (Convolutional Neural Network):** Extracts local geometric and structural patterns within the time window.
+- 🕰️ **TCN (Temporal Convolutional Network):** Leverages dilated causal convolutions to map long-range dependencies without the vanishing gradient problems of traditional RNNs.
 
-### Layer 2: The Meta-Learners
-We evaluated **13 different meta-learners** in delta-space (Random Forest, XGBoost, Ridge, Stacking Regressors) to find the perfect synergistic correction layer.
+### Layer 2: Meta-Learning Correction
+The predictions from the base learners are fed into a meta-learner layer. We evaluated 13 different algorithms (including Random Forests, XGBoost, Ridge, and Stacking Regressors) to dynamically weigh and correct the base learner outputs, generating the final highly-accurate forecast.
 
 ---
 
-## 📂 Repository Structure
+## 🏆 Key Experimental Findings
 
-The project has been architected as a professional, reproducible ML software system:
+Our experiments yielded several critical insights into deep learning for financial forecasting.
+
+### 1. The Winning Configuration
+The **E2 (LSTM + TCN)** ensemble paired with a **Random Forest meta-learner** achieved a massive **~48.7% reduction in RMSE** compared to the best standalone base model (CNN).
+- 🎯 **$R^2$ Score:** `0.98892`
+- 📉 **RMSE:** `0.009108` (MinMax scaled)
+- 🎯 **MAPE:** `0.942%`
+
+**Final Reconstruction Visualization:**
+![Final Reconstruction](results/figures/visual_result_11.png)
+
+### 2. Ablation Study: Absolute vs. Delta Transformation
+To prove that the delta-transformation is the true driver of accuracy, we compared a linear meta-learner trained on standard absolute prices against one trained in delta-space.
+
+The delta-transformed models demonstrated near-perfect variance explanation (jumping from an $R^2$ of ~0.81 up to **~0.988**) and massive reductions in both MSE and RMSE. Furthermore, in delta-space, shallow linear models and tree-ensembles consistently outperformed complex gradient boosting, highlighting that stabilizing the target distribution simplifies the learning objective.
+
+![Delta vs No Delta Transformation](results/figures/delta_vs_no_delta_table.png)
+
+### 3. Robustness: Static vs. Walk-Forward Optimization
+Financial models often suffer from concept drift, requiring constant retraining (Walk-Forward Optimization). We tested our static delta approach (trained once) against a dynamic walk-forward approach (rolling refits) to evaluate robustness over time.
+
+**The result:** The performance difference was negligible (often <2% change in error). The Delta-Transformation inherently stabilizes the distribution so well that frequent, computationally expensive meta-learner retraining becomes unnecessary for live-trading scenarios.
+
+![Walk-Forward vs Static Delta Table](results/figures/walk_forward_table.png)
+
+*The plots below show that despite the Walk-Forward model dynamically adjusting base-learner weights over time, the Rolling RMSE remains nearly identical to the highly efficient Static model.*
+![Walk-Forward vs Static Delta Graphs](results/figures/walk_forward_graphs.png)
+
+---
+
+## 🚀 Interactive Notebooks
+
+Want to experiment with the data and models immediately? You can run the complete pipeline directly in Google Colab:
+- [Previous Version (Initial Setup & Exploration)](https://colab.research.google.com/drive/1645Yj1u76I2qkI8xb82Mr2gnyR6VAaqH)
+- [Version After 3 Reviews (Final Version with Additional Tests)](https://colab.research.google.com/drive/1645Yj1u76I2qkI8xb82Mr2gnyR6VAaqH#scrollTo=9YHULAkwd4ZB)
+
+---
+
+## 📂 Repository & Reproducibility
+
+This project is architected as a professional, reproducible ML software system.
 
 ```text
 📦 nifty50-forecasting
- ┣ 📂 configs               # YAML configs for hyperparameters (epochs, LR, windows)
- ┣ 📂 data                  
- ┃ ┣ 📂 raw                 # Downloaded dataset
- ┃ ┗ 📂 processed           # Transformed & scaled data arrays
- ┣ 📂 notebooks             
- ┃ ┗ 📜 01_exploration.ipynb # Initial data exploration & prototyping
+ ┣ 📂 configs               # YAML configs for hyperparameters
+ ┣ 📂 data                  # Raw and processed datasets
+ ┣ 📂 notebooks             # Jupyter/Colab prototyping environments
  ┣ 📂 paper                 # Standalone research manuscript PDF
- ┣ 📂 results               
- ┃ ┣ 📜 metrics.csv         # Computed evaluation metrics
- ┃ ┣ 📜 model_comparison.csv# Comprehensive ablation results
- ┃ ┗ 📂 figures             # Saved evaluation plots and prediction tracking charts
- ┣ 📂 src                   
- ┃ ┣ 📂 models              # Base & Meta models (LSTM, CNN, TCN, Meta)
- ┃ ┣ 📜 data.py             # Data fetching pipelines
- ┃ ┣ 📜 preprocessing.py    # Scaling & windowing
- ┃ ┣ 📜 features.py         # Delta-transformation logic
- ┃ ┣ 📜 train.py            # Main execution pipeline
- ┃ ┗ 📜 evaluate.py         # Scoring metrics
- ┣ 📂 tests                 # Unit tests (pytest)
- ┣ 📜 README.md             
- ┣ 📜 pyproject.toml        # Package & dependency definitions
- ┗ 📜 requirements.txt      
+ ┣ 📂 results               # Metrics, ablation results, and saved figures
+ ┣ 📂 src                   # Core package (models, data pipelines, training)
+ ┗ 📂 tests                 # Unit tests for data logic (pytest)
 ```
 
----
-
-## 🚀 Reproducibility & Getting Started
+### Getting Started Locally
 
 **1. Clone the repository**
 ```bash
@@ -139,23 +117,16 @@ cd delta-meta-ensembles
 ```
 
 **2. Install Dependencies**
-We provide both a `requirements.txt` and a `pyproject.toml` for modern tooling.
 ```bash
 pip install -r requirements.txt
 # OR install as a package:
 pip install -e .[dev]
 ```
 
-**3. Run the Pipeline!**
-The entire pipeline is configurable. Simply pass a YAML config to the training script:
+**3. Run the Training Pipeline**
+The system is fully configurable via YAML:
 ```bash
 python -m src.train --config configs/ensemble.yaml
-```
-
-**4. Run the Unit Tests**
-Ensure the data logic and delta transformations are correct:
-```bash
-pytest tests/
 ```
 
 ---
